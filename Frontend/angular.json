@@ -100,6 +100,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "Frontend:build:production",
+            "firebaseProject": "ab-hspa-angular",
+            "firebaseHostingSite": "ab-hspa-angular"
+          }
         }
       }
     }

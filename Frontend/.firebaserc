@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "ab-hspa-angular"
+  },
+  "targets": {
+    "ab-hspa-angular": {
+      "hosting": {
+        "Frontend": [
+          "ab-hspa-angular"
+        ]
+      }
+    }
+  }
+}
