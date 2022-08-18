@@ -13,7 +13,11 @@ export class HousingService {
 
   jsonData: any;
 
-constructor(private http:HttpClient) { }
+constructor(private http: HttpClient) { }
+
+getAllCities(): Observable<string[]> {
+  return this.http.get<string[]>('http://localhost:43106/api/city');
+}
 
 getProperty(id: number) {
   return this.getAllProperties().pipe(
@@ -49,8 +53,7 @@ getProperty(id: number) {
             }
             }
         }
-    }
-
+      }
 
       for (const id in data) {
         if (SellRent) {
