@@ -1,12 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using WebAPI.Data;
-using WebAPI.Data.Repo;
+using WebAPI.Data.Repo.Interface;
 using WebAPI.Models;
 
 namespace WebAPI.Controllers
@@ -15,21 +9,22 @@ namespace WebAPI.Controllers
     [ApiController]
     public class CityController : ControllerBase
     {
-        private readonly ICityRepository repo;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CityController(ICityRepository repo)
+        public CityController(IUnitOfWork unitOfWork)
         {
-            this.repo = repo;
+            this.unitOfWork = unitOfWork;
         }
 
         //GET api/city
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var cities = await repo.GetCitiesAsync();
+            var cities = await unitOfWork.CityRepository.GetCitiesAsync();
             return Ok(cities);
         }
 
+        #region
         //[HttpGet("{id}")]
         //public string Get(int id)
         //{
@@ -48,13 +43,14 @@ namespace WebAPI.Controllers
         //    await dataContext.SaveChangesAsync();
         //    return Ok(city);
         //}
+        #endregion
 
         //POST api/city/add/city/post -- POST the data in JSON format
         [HttpPost("post")]
         public async Task<IActionResult> AddCity(City city)
         {
-            repo.AddCity(city);
-            await repo.SaveAsync();
+            unitOfWork.CityRepository.AddCity(city);
+            await unitOfWork.SaveAsync();
             return StatusCode(201);
         }
 
@@ -62,8 +58,8 @@ namespace WebAPI.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteCity(int id)
         {
-            repo.DeleteCity(id);
-            await repo.SaveAsync();
+            unitOfWork.CityRepository.DeleteCity(id);
+            await unitOfWork.SaveAsync();
             return Ok(id);
         }
     }
