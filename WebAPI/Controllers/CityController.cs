@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -60,6 +61,24 @@ namespace WebAPI.Controllers
             unitOfWork.CityRepository.AddCity(city);
             await unitOfWork.SaveAsync();
             return StatusCode(201);
+        }
+
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateCity(int id, CityDto cityDto)
+        {
+            var cityFromDb = await unitOfWork.CityRepository.FindCity(id);
+            mapper.Map(cityDto, cityFromDb);
+            await unitOfWork.SaveAsync();
+            return StatusCode(200);
+        }
+
+        [HttpPatch("update/{id}")]
+        public async Task<IActionResult> UpdateCityPatch(int id, JsonPatchDocument<City> cityToPatch)
+        {
+            var cityFromDb = await unitOfWork.CityRepository.FindCity(id);
+            cityToPatch.ApplyTo(cityFromDb, ModelState);
+            await unitOfWork.SaveAsync();
+            return StatusCode(200);
         }
 
         //DELETE api/city/city/delete/id -- 

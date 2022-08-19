@@ -26,7 +26,7 @@ namespace WebAPI
             services.AddDbContext<DataContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
 
             //Add CORS to the service to remove the CORS Plicy Error
             services.AddCors(option => {
