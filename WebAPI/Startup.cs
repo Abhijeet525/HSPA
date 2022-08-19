@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using WebAPI.Data;
 using WebAPI.Data.Repo;
 using WebAPI.Data.Repo.Interface;
+using WebAPI.Helpers;
 
 namespace WebAPI
 {
@@ -35,6 +36,7 @@ namespace WebAPI
                 });
             });
 
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
