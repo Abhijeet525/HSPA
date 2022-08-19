@@ -27,6 +27,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCities()
         {
+            throw new UnauthorizedAccessException();
             var cities = await unitOfWork.CityRepository.GetCitiesAsync();
             var cityDto = mapper.Map<IEnumerable<CityDto>>(cities);
             return Ok(cityDto);
@@ -66,7 +67,14 @@ namespace WebAPI.Controllers
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateCity(int id, CityDto cityDto)
         {
+            if (id != cityDto.Id)
+                return BadRequest("Update Not Allowed");
+
             var cityFromDb = await unitOfWork.CityRepository.FindCity(id);
+
+            if (cityFromDb == null)
+                return BadRequest("Update Not Allowed");
+            
             mapper.Map(cityDto, cityFromDb);
             await unitOfWork.SaveAsync();
             return StatusCode(200);
