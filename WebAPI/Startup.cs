@@ -48,9 +48,9 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //app.onfigureExceptionHandler(env);
-            app.UseMiddleware<ExceptionsMiddleware>();
-
+            //Added Custom Exception Handling Extension and Middleware
+            app.ConfigureExceptionHandler(env);
+            
             app.UseRouting();
 
             //After Adding CORS to the service use it after UseRouting and before UseEndpoints emthods to remove the CORS Plicy Error
