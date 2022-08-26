@@ -27,7 +27,6 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCities()
         {
-            throw new UnauthorizedAccessException();
             var cities = await unitOfWork.CityRepository.GetCitiesAsync();
             var cityDto = mapper.Map<IEnumerable<CityDto>>(cities);
             return Ok(cityDto);
