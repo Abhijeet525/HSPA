@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -6,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System.Net;
+using System.Text;
 using WebAPI.Data;
 using WebAPI.Data.Repo;
 using WebAPI.Data.Repo.Interface;
@@ -43,6 +46,20 @@ namespace WebAPI
 
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            var secretKey = Configuration.GetSection("AppSettings:Key").Value;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt => {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        IssuerSigningKey = key
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +72,8 @@ namespace WebAPI
 
             //After Adding CORS to the service use it after UseRouting and before UseEndpoints emthods to remove the CORS Plicy Error
             app.UseCors();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

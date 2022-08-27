@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +13,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CityController : ControllerBase
     {
         private readonly IUnitOfWork unitOfWork;
@@ -25,6 +27,7 @@ namespace WebAPI.Controllers
 
         //GET api/city
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCities()
         {
             var cities = await unitOfWork.CityRepository.GetCitiesAsync();
